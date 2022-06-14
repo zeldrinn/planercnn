@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3.6 \
         python3.6-dev \
         python3-pip \
-	python3-wheel \
         python3-setuptools \
         g++-6 \
         libsm6 \
@@ -32,7 +31,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 10 && \
 
 RUN git clone -b dockerfile https://github.com/zeldrinn/planercnn.git
 
-RUN cd planercnn && python3 -m pip install --upgrade pip && pip3 install wheel && pip3 install h5py torch==0.4.1 -f https://download.pytorch.org/whl/cu92/torch_stable.html && pip3 install -r requirements.txt 
+RUN cd planercnn && python3 -m pip install --upgrade pip && pip3 install h5py torch==0.4.1 -f https://download.pytorch.org/whl/cu92/torch_stable.html && pip3 install -r requirements.txt 
 
 RUN gcc -v && cat /usr/local/cuda/version.txt
 
