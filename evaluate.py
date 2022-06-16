@@ -60,12 +60,13 @@ class PlaneRCNNDetector():
 
         ## Indicates that the refinement network is trained separately        
         separate = modelType == 'refine'
+        device = torch.device('cpu')
 
         if not separate:
             if options.startEpoch >= 0:
-                self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint_' + str(options.startEpoch) + '.pth'))
+                self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint_' + str(options.startEpoch) + '.pth', map_location=device))
             else:
-                self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint.pth'))
+                self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint.pth', map_location=device))
                 pass
             pass
 
@@ -75,12 +76,12 @@ class PlaneRCNNDetector():
             self.refine_model.cuda()
             self.refine_model.eval()
             if not separate:
-                state_dict = torch.load(checkpoint_dir + '/checkpoint_refine.pth')
+                state_dict = torch.load(checkpoint_dir + '/checkpoint_refine.pth', map_location=device)
                 self.refine_model.load_state_dict(state_dict)
                 pass
             else:
-                self.model.load_state_dict(torch.load('checkpoint/pair_' + options.anchorType + '_pair/checkpoint.pth'))
-                self.refine_model.load_state_dict(torch.load('checkpoint/instance_normal_refine_mask_softmax_valid/checkpoint_refine.pth'))
+                self.model.load_state_dict(torch.load('checkpoint/pair_' + options.anchorType + '_pair/checkpoint.pth', map_location=device))
+                self.refine_model.load_state_dict(torch.load('checkpoint/instance_normal_refine_mask_softmax_valid/checkpoint_refine.pth', map_location=device))
                 pass
             pass
 
@@ -198,7 +199,9 @@ class DepthDetector():
         if options.suffix != '':
             checkpoint_dir += '_' + options.suffix
             pass
-        self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint.pth'))
+
+        device = torch.device('cpu')
+        self.model.load_state_dict(torch.load(checkpoint_dir + '/checkpoint.pth', map_location=device))
         return
 
     def detect(self, sample):
